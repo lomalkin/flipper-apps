@@ -11,6 +11,7 @@ enum HidDebugSubmenuIndex {
     HidSubmenuIndexKeyboard,
     HidSubmenuIndexMedia,
     HidSubmenuIndexTikTok,
+    HidSubmenuIndexSlack,
     HidSubmenuIndexMouse,
     HidSubmenuIndexMouseClicker,
     HidSubmenuIndexMouseJiggler,
@@ -39,6 +40,9 @@ static void hid_submenu_callback(void* context, uint32_t index) {
     } else if(index == HidSubmenuIndexTikTok) {
         app->view_id = BtHidViewTikTok;
         view_dispatcher_switch_to_view(app->view_dispatcher, BtHidViewTikTok);
+    } else if(index == HidSubmenuIndexSlack) {
+        app->view_id = HidViewSlack;
+        view_dispatcher_switch_to_view(app->view_dispatcher, HidViewSlack);
     } else if(index == HidSubmenuIndexMouseClicker) {
         app->view_id = HidViewMouseClicker;
         view_dispatcher_switch_to_view(app->view_dispatcher, HidViewMouseClicker);
@@ -66,6 +70,7 @@ static void bt_hid_connection_status_changed_callback(BtStatus status, void* con
     hid_mouse_clicker_set_connected_status(hid->hid_mouse_clicker, connected);
     hid_mouse_jiggler_set_connected_status(hid->hid_mouse_jiggler, connected);
     hid_tiktok_set_connected_status(hid->hid_tiktok, connected);
+    hid_slack_set_connected_status(hid->hid_slack, connected);
 }
 
 static void hid_dialog_callback(DialogExResult result, void* context) {
@@ -130,6 +135,12 @@ Hid* hid_alloc(HidTransport transport) {
             HidSubmenuIndexTikTok,
             hid_submenu_callback,
             app);
+        submenu_add_item(
+            app->device_type_submenu,
+            "Slack Audio Controller",
+            HidSubmenuIndexSlack,
+            hid_submenu_callback,
+            app);
     }
     submenu_add_item(
         app->device_type_submenu,
@@ -189,6 +200,12 @@ Hid* hid_app_alloc_view(void* context) {
     view_dispatcher_add_view(
         app->view_dispatcher, BtHidViewTikTok, hid_tiktok_get_view(app->hid_tiktok));
 
+    // Slack view
+    app->hid_slack = hid_slack_alloc(app);
+    view_set_previous_callback(hid_slack_get_view(app->hid_slack), hid_exit_confirm_view);
+    view_dispatcher_add_view(
+        app->view_dispatcher, HidViewSlack, hid_slack_get_view(app->hid_slack));
+
     // Mouse view
     app->hid_mouse = hid_mouse_alloc(app);
     view_set_previous_callback(hid_mouse_get_view(app->hid_mouse), hid_exit_confirm_view);
@@ -243,6 +260,8 @@ void hid_free(Hid* app) {
     hid_mouse_jiggler_free(app->hid_mouse_jiggler);
     view_dispatcher_remove_view(app->view_dispatcher, BtHidViewTikTok);
     hid_tiktok_free(app->hid_tiktok);
+    view_dispatcher_remove_view(app->view_dispatcher, HidViewSlack);
+    hid_slack_free(app->hid_slack);
     view_dispatcher_free(app->view_dispatcher);
 
     // Close records
