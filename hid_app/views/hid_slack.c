@@ -94,8 +94,7 @@ static void hid_slack_draw_callback(Canvas* canvas, void* context) {
     elements_multiline_text_aligned(canvas, 13, 62, AlignLeft, AlignBottom, "Hold to exit");
 }
 
-static void
-    hid_slack_process_press(HidSlack* hid_slack, HidSlackModel* model, InputEvent* event) {
+static void hid_slack_process_press(HidSlack* hid_slack, HidSlackModel* model, InputEvent* event) {
     if(event->key == InputKeyUp) {
         model->up_pressed = true;
 
@@ -114,7 +113,9 @@ static void
         //hid_hal_consumer_key_press(hid_slack->hid, HID_KEYBOARD_L_SHIFT);
         //hid_hal_keyboard_press(hid_slack->hid, HID_KEYBOARD_J);
         //hid_hal_keyboard_press(hid_slack->hid, HID_KEYBOARD_L_SHIFT | HID_KEYBOARD_J);
-        hid_hal_keyboard_press(hid_slack->hid, KEY_MOD_LEFT_SHIFT | KEY_MOD_LEFT_GUI | HID_KEYBOARD_SPACEBAR);  // Cmd+Shift+Space
+        hid_hal_keyboard_press(
+            hid_slack->hid,
+            KEY_MOD_LEFT_SHIFT | KEY_MOD_LEFT_GUI | HID_KEYBOARD_SPACEBAR); // Cmd+Shift+Space
         model->ok_pressed = true;
     }
 }
@@ -138,7 +139,9 @@ static void
         // hid_hal_keyboard_release(hid_slack->hid, HID_KEYBOARD_J);
         // hid_hal_consumer_key_release(hid_slack->hid, HID_KEYBOARD_L_SHIFT);
         //hid_hal_keyboard_press(hid_slack->hid, HID_KEYBOARD_L_SHIFT | HID_KEYBOARD_J);
-        hid_hal_keyboard_release(hid_slack->hid, KEY_MOD_LEFT_SHIFT | KEY_MOD_LEFT_GUI | HID_KEYBOARD_SPACEBAR);  // Cmd+Shift+Space
+        hid_hal_keyboard_release(
+            hid_slack->hid,
+            KEY_MOD_LEFT_SHIFT | KEY_MOD_LEFT_GUI | HID_KEYBOARD_SPACEBAR); // Cmd+Shift+Space
         model->ok_pressed = false;
     }
 }
@@ -167,12 +170,12 @@ static bool hid_slack_input_callback(InputEvent* event, void* context) {
                     //
                     consumed = true;
                 } else if(event->key == InputKeyUp) {
-                    // 
+                    //
                     // Unmute
                     //hid_hal_consumer_key_press(hid_slack->hid, HID_CONSUMER_VOLUME_MUTE);
                     consumed = true;
                 } else if(event->key == InputKeyDown) {
-                    // 
+                    //
                     // Mute
                     //hid_hal_consumer_key_release(hid_slack->hid, HID_CONSUMER_VOLUME_MUTE);
                     consumed = true;

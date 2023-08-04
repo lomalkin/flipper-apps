@@ -1,5 +1,6 @@
+/**/dist/*
 .vscode
-/*/dist
-/*/.clang-format
+.clang-format
+.editorconfig
 
 .DS_Store
