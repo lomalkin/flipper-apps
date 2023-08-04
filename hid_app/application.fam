@@ -13,8 +13,8 @@ App(
 
 
 App(
-    appid="hid_ble",
-    name="Remote",
+    appid="hid_ble_slack",
+    name="Remote Slack",
     apptype=FlipperAppType.EXTERNAL,
     entry_point="hid_ble_app",
     stack_size=1 * 1024,
@@ -23,4 +23,8 @@ App(
     fap_icon="hid_ble_10px.png",
     fap_icon_assets="assets",
     fap_icon_assets_symbol="hid",
+    # Optional values
+    fap_version=(0, 2),  # (major, minor)
+    # fap_author="J. Doe",
+    fap_weburl="https://github.com/lomalkin/flipper-apps.git",
 )
